@@ -1,0 +1,69 @@
+* Past
+
+I did this before.
+See: https://superuser.com/questions/1254778/build-gnu-guile-stable-on-ubuntu-16-04
+
+* Get guile-scheme
+
+#+begin_src bash
+wget https://ftp.gnu.org/gnu/guile/guile-2.2.3.tar.xz
+tar xf guile-2.2.3.tar.xz
+#+end_src
+
+(see https://askubuntu.com/a/107976)
+
+* Install required libraries
+
+#+begin_src bash
+sudo apt-get install -y \
+  libltdl-dev \
+  libgmp-dev \
+  libunistring-dev \
+  pkg-config \
+  libffi-dev \
+  libgc-dev
+#+end_src
+
+(see https://superuser.com/a/1063074 and http://www.hboehm.info/gc/)
+
+* Make
+
+#+begin_src bash
+make -j...
+#+end_src
+
+* Install
+
+#+begin_src bash
+sudo make install
+#+end_src
+
+* Run Guile Scheme tests
+
+run the executable file:
+
+#+begin_src bash
+./check-guile
+#+end_src
+
+** Result for Guile Scheme release 2.2.3 (2018-05-06)
+
+#+begin_src
+Totals for this test run:
+passes:                 41481
+failures:               0
+unexpected passes:      0
+expected failures:      10
+unresolved test cases:  571
+untested test cases:    1
+unsupported test cases: 1
+errors:                 0
+#+end_src
+
+* Add library path to library path
+
+Put the following in your ~.profile~:
+
+#+begin_src
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+#+end_src
