@@ -21,7 +21,8 @@ sudo apt-get install -y \
   libunistring-dev \
   pkg-config \
   libffi-dev \
-  libgc-dev
+  libgc-dev \
+  libreadline-dev
 #+end_src
 
 (see https://superuser.com/a/1063074 and http://www.hboehm.info/gc/)
