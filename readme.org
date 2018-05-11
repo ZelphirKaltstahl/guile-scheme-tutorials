@@ -68,3 +68,14 @@ Put the following in your ~.profile~:
 #+begin_src
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 #+end_src
+
+* Enable readline support in REPL
+
+For using up down etc. to browse through inputs.
+
+Add the following lines to your ~$HOME/.guile~ file:
+
+#+begin_src scheme
+(use-modules (ice-9 readline))
+(activate-readline)
+#+end_src
