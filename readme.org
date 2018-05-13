@@ -27,6 +27,12 @@ sudo apt-get install -y \
 
 (see https://superuser.com/a/1063074 and http://www.hboehm.info/gc/)
 
+* Configure
+
+#+begin_src bash
+./configure
+#+end_src
+
 * Make
 
 #+begin_src bash
