@@ -120,9 +120,17 @@
                   (partition even? (iota 30000))
                 (list evens odds)))))
 
+;; test with 2 cores
+(let ([evens-and-odds (receive (evens odds)
+                          (partition even? (iota 30000))
+                        (list evens odds))])
+  (time
+   (lambda ()
+     (par-map busy-work-2
+              evens-and-odds))))
+
+;; test with single core to see speedup
 (time
  (lambda ()
    (par-map busy-work-2
-            (receive (evens odds)
-                (partition even? (iota 30000))
-              (list evens odds)))))
+            (list (iota 30000)))))
