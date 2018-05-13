@@ -96,6 +96,37 @@
   res)
 
 
+(define (partition-4 numbers)
+  (define (loop numbers rc0 rc1 rc2 rc3)
+    (cond [(null? numbers) (list (reverse rc0)
+                                 (reverse rc1)
+                                 (reverse rc2)
+                                 (reverse rc3))]
+          [else
+           (let* ([number (car numbers)]
+                  [residue (remainder number 4)])
+             (cond [(= residue 0) (loop (cdr numbers)
+                                        (cons number rc0)
+                                        rc1
+                                        rc2
+                                        rc3)]
+                   [(= residue 1) (loop (cdr numbers)
+                                        rc0
+                                        (cons number rc1)
+                                        rc2
+                                        rc3)]
+                   [(= residue 2) (loop (cdr numbers)
+                                        rc0
+                                        rc1
+                                        (cons number rc2)
+                                        rc3)]
+                   [(= residue 3) (loop (cdr numbers)
+                                        rc0
+                                        rc1
+                                        rc2
+                                        (cons number rc3))]))]))
+  (loop numbers '() '() '() '()))
+
 (n-par-map (current-processor-count)
            busy-work-2
            (split-into-n-chunks (iota 30000) 4))
@@ -128,6 +159,52 @@
    (lambda ()
      (par-map busy-work-2
               evens-and-odds))))
+
+;; test with 4 cores
+;; parallel
+(let ([residue-classes (partition-4 (iota 30000))])
+  (time
+   (lambda ()
+     (parallel (busy-work-2 (car residue-classes))
+               (busy-work-2 (cadr residue-classes))
+               (busy-work-2 (caddr residue-classes))
+               (busy-work-2 (cadddr residue-classes))))))
+(let ([residue-classes (partition-4 (iota 50000))])
+  (time
+   (lambda ()
+     (parallel (busy-work-2 (car residue-classes))
+               (busy-work-2 (cadr residue-classes))
+               (busy-work-2 (caddr residue-classes))
+               (busy-work-2 (cadddr residue-classes))))))
+
+;; par-map
+(let ([residue-classes (partition-4 (iota 30000))])
+  (time
+   (lambda ()
+     (par-map busy-work-2
+              residue-classes))))
+;; n-par-map - max cores
+(let ([residue-classes (partition-4 (iota 30000))])
+  (time
+   (lambda ()
+     (n-par-map (current-processor-count)
+                busy-work-2
+                residue-classes))))
+;; n-par-map - 2 cores
+(let ([residue-classes (partition-4 (iota 30000))])
+  (time
+   (lambda ()
+     (n-par-map 2
+                busy-work-2
+                residue-classes))))
+;; n-par-map - 1 core
+(let ([residue-classes (partition-4 (iota 30000))])
+  (time
+   (lambda ()
+     (n-par-map 1
+                busy-work-2
+                residue-classes))))
+
 
 ;; test with single core to see speedup
 (time
